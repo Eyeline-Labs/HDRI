@@ -47,44 +47,29 @@
         <div class="hero-copy reveal">
           <p class="eyebrow"><span>SIGGRAPH 2026</span> Posters</p>
           <h1>Promoting LDR Panoramas to HDRI</h1>
-          <p class="hero-subtitle">with Rendering-Space Losses</p>
+          <p class="hero-subtitle"><span class="with-word">with</span> Rendering-Space Losses</p>
           <p class="lede">
             We recover clipped illumination in casual panoramas by training a video diffusion model with losses that measure what matters: the light an HDRI produces.
           </p>
+          <div class="authors" aria-label="Authors and affiliations">
+            <p>
+              <a href="https://yzmblog.github.io/" target="_blank" rel="noopener noreferrer">Zhengming Yu<sup>1,3</sup></a>
+              <a href="https://limacv.github.io/homepage/" target="_blank" rel="noopener noreferrer">Li Ma<sup>1</sup></a>
+              <a href="https://mingminghe.com/" target="_blank" rel="noopener noreferrer">Mingming He<sup>1</sup></a>
+              <a href="https://evergreen0929.github.io/" target="_blank" rel="noopener noreferrer">Jingdong Zhang<sup>3</sup></a>
+              <a href="https://shanemankiw.github.io/" target="_blank" rel="noopener noreferrer">Jionghao Wang<sup>3</sup></a>
+              <a href="https://ningyu1991.github.io/" target="_blank" rel="noopener noreferrer">Ning Yu<sup>1,2</sup></a>
+              <a href="https://www.pauldebevec.com/" target="_blank" rel="noopener noreferrer">Paul Debevec<sup>1,2</sup></a>
+            </p>
+            <p class="affiliations"><sup>1</sup> Eyeline Labs &nbsp;·&nbsp; <sup>2</sup> Netflix &nbsp;·&nbsp; <sup>3</sup> Texas A&amp;M University</p>
+          </div>
           <div class="hero-actions">
             <a class="button button-primary" href="#demo">Watch the demo</a>
+            <a class="button button-secondary" href="https://dl.acm.org/doi/10.1145/3799825.3818762" target="_blank" rel="noopener noreferrer">Abstract <span aria-hidden="true">↗</span></a>
             <a class="button button-secondary" href="assets/poster.pdf">View poster <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
-        <figure class="hero-visual reveal">
-          <div class="image-frame hero-frame">
-            <img
-              src="assets/exposure-grid.webp"
-              alt="Input and recovered HDR panoramas at four exposure levels for an outdoor river scene and an indoor church scene"
-              width="2423"
-              height="1200"
-            />
-          </div>
-          <figcaption>
-            <span>Clipped LDR input</span>
-            <span class="caption-rule"></span>
-            <span>Recovered HDRI</span>
-          </figcaption>
-        </figure>
-
-        <div class="authors reveal" aria-label="Authors and affiliations">
-          <p>
-            <span>Zhengming Yu<sup>1,3</sup></span>
-            <span>Li Ma<sup>1,2</sup></span>
-            <span>Mingming He<sup>1</sup></span>
-            <span>Jingdong Zhang<sup>3</sup></span>
-            <span>Jionghao Wang<sup>3</sup></span>
-            <span>Ning Yu<sup>1,2</sup></span>
-            <span>Paul Debevec<sup>1,2</sup></span>
-          </p>
-          <p class="affiliations"><sup>1</sup> Eyeline Labs &nbsp;·&nbsp; <sup>2</sup> Netflix &nbsp;·&nbsp; <sup>3</sup> Texas A&amp;M University</p>
-        </div>
       </section>
 
       <section class="section abstract-section reveal">
@@ -96,7 +81,7 @@
               HDRIs are the standard light sources for image-based lighting, yet casual LDR panoramas clip precisely where the most important illumination lives. Saturated highlights erase light intensity, color, and direction—errors that become obvious when the panorama lights a virtual scene.
             </p>
             <p>
-              Our method promotes a clipped panorama to clean HDR radiance. A fine-tuned Wan 2.1 VACE 14B model reconstructs saturated regions, while diffuse spherical-harmonic and glossy GGX losses directly supervise its image-based lighting behavior.
+              Our method promotes a clipped panorama to linear HDRIs. A fine-tuned Wan 2.1 VACE 14B model reconstructs saturated regions, while diffuse spherical-harmonic and glossy GGX losses directly supervise its image-based lighting behavior.
             </p>
           </div>
         </div>
@@ -126,22 +111,22 @@
           <div class="pipeline-arrow" aria-hidden="true">→</div>
           <div class="pipeline-node">
             <span class="node-number">03</span>
-            <strong>Clean radiance</strong>
-            <small>Linear HDR environment map</small>
+            <strong>Clean light source</strong>
+            <small>Linear HDR panorama</small>
           </div>
         </div>
 
         <div class="loss-grid">
           <article class="loss-card reveal">
             <div class="loss-icon diffuse-icon" aria-hidden="true"></div>
-            <p class="card-kicker">Low frequency</p>
+            <p class="card-kicker">Low-frequency response</p>
             <h3>Diffuse SH loss</h3>
             <p>Compares 27 second-order spherical-harmonic coefficients in log space, directly supervising irradiance and global energy.</p>
             <code>L<sub>diffuse</sub> = Δ(log(1 + c<sub>SH</sub>))²</code>
           </article>
           <article class="loss-card reveal">
             <div class="loss-icon glossy-icon" aria-hidden="true"></div>
-            <p class="card-kicker">High frequency</p>
+            <p class="card-kicker">Higher-frequency response</p>
             <h3>Glossy GGX loss</h3>
             <p>Compares prefiltered specular lobes over 64 × 128 HDRI maps, preserving sharp highlights and reflection response.</p>
             <code>L<sub>glossy</sub> = ‖Δ(log(1 + E<sub>GGX</sub>))‖²</code>
@@ -161,7 +146,7 @@
         <article class="result-feature reveal">
           <div class="result-copy">
             <span class="result-index">01 / Exposure recovery</span>
-            <h3>Highlights return as radiance—not a flat white patch.</h3>
+            <h3>Highlights return as linear HDR light source —not a flat white patch.</h3>
             <p>Across a six-stop exposure sweep, the output restores structured light sources that remain visible and correctly placed at darker exposures.</p>
           </div>
           <figure class="result-media light-media">
@@ -194,7 +179,7 @@
         <div class="section-heading reveal">
           <div>
             <div class="section-label">Demo</div>
-            <h2>See the recovered light in motion.</h2>
+            <h2>See the recovered light in video.</h2>
           </div>
           <p>Input, prediction, and ground truth are compared across panorama exposure sweeps and rendered scenes.</p>
         </div>
@@ -230,7 +215,7 @@
     </main>
 
     <footer>
-      <p>Eyeline Labs · Netflix · Texas A&amp;M University</p>
+      <p>Eyeline Labs</p>
       <a href="#top">Back to top ↑</a>
     </footer>
   </body>
