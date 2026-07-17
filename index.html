@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Promoting clipped LDR panoramas to clean HDRI radiance with rendering-space supervision for faithful image-based lighting."
+    />
+    <meta property="og:title" content="Promoting LDR Panoramas to HDRI" />
+    <meta
+      property="og:description"
+      content="Rendering-space losses recover the illumination needed for diffuse and specular image-based lighting."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/exposure-grid.webp" />
+    <meta name="theme-color" content="#080b11" />
+    <title>Promoting LDR Panoramas to HDRI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="HDRI project home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>HDRI</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#approach">Approach</a>
+        <a href="#results">Results</a>
+        <a href="#demo">Demo</a>
+      </nav>
+      <a class="header-link" href="assets/poster.pdf">Poster <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span>SIGGRAPH 2026</span> Posters</p>
+          <h1>Promoting LDR Panoramas to HDRI</h1>
+          <p class="hero-subtitle">with Rendering-Space Losses</p>
+          <p class="lede">
+            We recover clipped illumination in casual panoramas by training a video diffusion model with losses that measure what matters: the light an HDRI produces.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#demo">Watch the demo</a>
+            <a class="button button-secondary" href="assets/poster.pdf">View poster <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <figure class="hero-visual reveal">
+          <div class="image-frame hero-frame">
+            <img
+              src="assets/exposure-grid.webp"
+              alt="Input and recovered HDR panoramas at four exposure levels for an outdoor river scene and an indoor church scene"
+              width="2423"
+              height="1200"
+            />
+          </div>
+          <figcaption>
+            <span>Clipped LDR input</span>
+            <span class="caption-rule"></span>
+            <span>Recovered HDRI</span>
+          </figcaption>
+        </figure>
+
+        <div class="authors reveal" aria-label="Authors and affiliations">
+          <p>
+            <span>Zhengming Yu<sup>1,3</sup></span>
+            <span>Li Ma<sup>1,2</sup></span>
+            <span>Mingming He<sup>1</sup></span>
+            <span>Jingdong Zhang<sup>3</sup></span>
+            <span>Jionghao Wang<sup>3</sup></span>
+            <span>Ning Yu<sup>1,2</sup></span>
+            <span>Paul Debevec<sup>1,2</sup></span>
+          </p>
+          <p class="affiliations"><sup>1</sup> Eyeline Labs &nbsp;·&nbsp; <sup>2</sup> Netflix &nbsp;·&nbsp; <sup>3</sup> Texas A&amp;M University</p>
+        </div>
+      </section>
+
+      <section class="section abstract-section reveal">
+        <div class="section-label">Overview</div>
+        <div class="abstract-grid">
+          <h2>Optimize the light,<br />not only the pixels.</h2>
+          <div class="abstract-copy">
+            <p>
+              HDRIs are the standard light sources for image-based lighting, yet casual LDR panoramas clip precisely where the most important illumination lives. Saturated highlights erase light intensity, color, and direction—errors that become obvious when the panorama lights a virtual scene.
+            </p>
+            <p>
+              Our method promotes a clipped panorama to clean HDR radiance. A fine-tuned Wan 2.1 VACE 14B model reconstructs saturated regions, while diffuse spherical-harmonic and glossy GGX losses directly supervise its image-based lighting behavior.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section approach" id="approach">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-label">Approach</div>
+            <h2>Rendering-space supervision</h2>
+          </div>
+          <p>Two complementary lighting objectives guide the model from a clipped panorama to a useful HDR light source.</p>
+        </div>
+
+        <div class="pipeline reveal" aria-label="Method pipeline">
+          <div class="pipeline-node">
+            <span class="node-number">01</span>
+            <strong>Clipped LDR</strong>
+            <small>Panorama + saturation mask</small>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-node featured">
+            <span class="node-number">02</span>
+            <strong>HDRI-tuned VACE</strong>
+            <small>Single-frame masked inpainting</small>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-node">
+            <span class="node-number">03</span>
+            <strong>Clean radiance</strong>
+            <small>Linear HDR environment map</small>
+          </div>
+        </div>
+
+        <div class="loss-grid">
+          <article class="loss-card reveal">
+            <div class="loss-icon diffuse-icon" aria-hidden="true"></div>
+            <p class="card-kicker">Low frequency</p>
+            <h3>Diffuse SH loss</h3>
+            <p>Compares 27 second-order spherical-harmonic coefficients in log space, directly supervising irradiance and global energy.</p>
+            <code>L<sub>diffuse</sub> = Δ(log(1 + c<sub>SH</sub>))²</code>
+          </article>
+          <article class="loss-card reveal">
+            <div class="loss-icon glossy-icon" aria-hidden="true"></div>
+            <p class="card-kicker">High frequency</p>
+            <h3>Glossy GGX loss</h3>
+            <p>Compares prefiltered specular lobes over 64 × 128 HDRI maps, preserving sharp highlights and reflection response.</p>
+            <code>L<sub>glossy</sub> = ‖Δ(log(1 + E<sub>GGX</sub>))‖²</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="section results" id="results">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-label">Results</div>
+            <h2>Light that survives rendering.</h2>
+          </div>
+          <p>The recovered panoramas match ground-truth lighting across exposure, dominant direction, diffuse shading, and specular reflection.</p>
+        </div>
+
+        <article class="result-feature reveal">
+          <div class="result-copy">
+            <span class="result-index">01 / Exposure recovery</span>
+            <h3>Highlights return as radiance—not a flat white patch.</h3>
+            <p>Across a six-stop exposure sweep, the output restores structured light sources that remain visible and correctly placed at darker exposures.</p>
+          </div>
+          <figure class="result-media light-media">
+            <img src="assets/exposure-grid.webp" alt="Exposure sweep comparing clipped input panoramas with recovered outputs" loading="lazy" />
+          </figure>
+        </article>
+
+        <div class="result-pair">
+          <article class="result-card reveal">
+            <figure class="result-media">
+              <img src="assets/error-maps.png" alt="Input, output, and ground truth HDRIs with color, intensity ratio, and direction error maps" loading="lazy" />
+            </figure>
+            <span class="result-index">02 / Accuracy</span>
+            <h3>Low color and direction error</h3>
+            <p>The reconstructed dominant light closely matches the ground truth in intensity, chromaticity, and angular position.</p>
+          </article>
+
+          <article class="result-card reveal">
+            <figure class="result-media">
+              <img src="assets/relighting.png" alt="Relighting comparison between clipped input, our recovered HDRI, and ground truth" loading="lazy" />
+            </figure>
+            <span class="result-index">03 / Image-based lighting</span>
+            <h3>Faithful diffuse and glossy response</h3>
+            <p>Relit objects recover the illumination strength, shadowing, and reflections missing from the clipped input.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section demo-section" id="demo">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-label">Demo</div>
+            <h2>See the recovered light in motion.</h2>
+          </div>
+          <p>Input, prediction, and ground truth are compared across panorama exposure sweeps and rendered scenes.</p>
+        </div>
+        <div class="video-shell reveal">
+          <video controls playsinline preload="metadata" poster="assets/demo-poster.jpg">
+            <source src="assets/demo.mp4" type="video/mp4" />
+            Your browser does not support embedded video.
+          </video>
+        </div>
+      </section>
+
+      <section class="section citation-section reveal">
+        <div class="section-label">Citation</div>
+        <div class="citation-grid">
+          <div>
+            <h2>Promoting LDR Panoramas to HDRI with Rendering-Space Losses</h2>
+            <p>SIGGRAPH 2026 Posters</p>
+          </div>
+          <div class="citation-block">
+            <pre><code>@inproceedings{yu2026promoting,
+  title={Promoting LDR Panoramas to HDRI
+    with Rendering-Space Losses},
+  author={Yu, Zhengming and Ma, Li and He,
+    Mingming and Zhang, Jingdong and Wang,
+    Jionghao and Yu, Ning and Debevec, Paul},
+  booktitle={SIGGRAPH Posters},
+  year={2026}
+}</code></pre>
+            <button class="copy-button" type="button" data-copy-citation>Copy BibTeX</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Eyeline Labs · Netflix · Texas A&amp;M University</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+  </body>
+</html>
