@@ -81,7 +81,7 @@
               HDRIs are the standard light sources for image-based lighting, yet casual LDR panoramas clip precisely where the most important illumination lives. Saturated highlights erase light intensity, color, and direction—errors that become obvious when the panorama lights a virtual scene.
             </p>
             <p>
-              Our method promotes a clipped panorama to linear HDRIs. A fine-tuned Wan 2.1 VACE 14B model reconstructs saturated regions, while diffuse spherical-harmonic and glossy GGX losses directly supervise its image-based lighting behavior.
+              Our method promotes a clipped panorama to linear HDRIs. A fine-tuned video diffusion model reconstructs saturated regions, while diffuse spherical-harmonic and glossy GGX losses directly supervise its image-based lighting behavior.
             </p>
           </div>
         </div>
@@ -105,7 +105,7 @@
           <div class="pipeline-arrow" aria-hidden="true">→</div>
           <div class="pipeline-node featured">
             <span class="node-number">02</span>
-            <strong>HDRI-tuned VACE</strong>
+            <strong>HDRI-tuned diffusion model</strong>
             <small>Single-frame masked inpainting</small>
           </div>
           <div class="pipeline-arrow" aria-hidden="true">→</div>
@@ -200,12 +200,10 @@
           </div>
           <div class="citation-block">
             <pre><code>@inproceedings{yu2026promoting,
-  title={Promoting LDR Panoramas to HDRI
-    with Rendering-Space Losses},
-  author={Yu, Zhengming and Ma, Li and He,
-    Mingming and Zhang, Jingdong and Wang,
-    Jionghao and Yu, Ning and Debevec, Paul},
-  booktitle={SIGGRAPH Posters},
+  title={Promoting LDR Panoramas to HDRI with Rendering-Space Losses},
+  author={Yu, Zhengming and Ma, Li and He, Mingming and Zhang, Jingdong and Wang, Jionghao and Yu, Ning and Debevec, Paul},
+  booktitle={Proceedings of the Special Interest Group on Computer Graphics and Interactive Techniques Conference Posters},
+  pages={1--3},
   year={2026}
 }</code></pre>
             <button class="copy-button" type="button" data-copy-citation>Copy BibTeX</button>
